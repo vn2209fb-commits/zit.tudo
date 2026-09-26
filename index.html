@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Xem Phim Miễn Phí</title>
+    <style>
+        /* Reset CSS & Biến giao diện */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #141414;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Thanh Menu (Header) */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 4%;
+            background-color: rgba(0, 0, 0, 0.85);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            color: #e50914;
+            font-size: 28px;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-decoration: none;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            padding: 8px 15px;
+            border: 1px solid #333;
+            border-radius: 20px;
+            background-color: #222;
+            color: #fff;
+            outline: none;
+            width: 250px;
+            transition: 0.3s;
+        }
+
+        .search-box input:focus {
+            width: 300px;
+            border-color: #e50914;
+        }
+
+        /* Banner Phim Nổi Bật */
+        .banner {
+            height: 60vh;
+            background: linear-gradient(to top, #141414, transparent), url('https://unsplash.com') no-repeat center center/cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 4%;
+        }
+
+        .banner-content h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .banner-content p {
+            max-width: 600px;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: #ccc;
+        }
+
+        .btn-play {
+            padding: 10px 25px;
+            background-color: #e50914;
+            color: white;
+            border: none;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-play:hover {
+            background-color: #b80710;
+        }
+
+        /* Danh Sách Phim */
+        .container {
+            padding: 40px 4%;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .movie-card {
+            background-color: #1f1f1f;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .movie-card:hover {
+            transform: scale(1.05);
+        }
+
+        .movie-card img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+        }
+
+        .movie-info {
+            padding: 12px;
+        }
+
+        .movie-title {
+            font-size: 1rem;
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Trình phát video (Ẩn mặc định, hiện khi bấm xem phim) */
+        .video-player-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .video-player-container video {
+            width: 80%;
+            max-width: 800px;
+            border: 2px solid #333;
+            border-radius: 8px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            font-size: 2rem;
+            color: #fff;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Thanh Menu -->
+    <header>
+        <a href="#" class="logo">PhimHot</a>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Tìm tên phim..." onkeyup="searchMovie()">
+        </div>
+    </header>
+
+    <!-- Banner chính -->
+    <div class="banner">
+        <div class="banner-content">
+            <h1>Đại Chiến Các Vì Sao</h1>
+            <p>Bộ phim viễn tưởng hấp dẫn nhất năm với những trận chiến không gian mãn nhãn và cốt truyện đầy kịch tính.</p>
+            <button class="btn-play" onclick="playVideo('https://w3schools.com')">Xem Ngay</button>
+        </div>
+    </div>
+
+    <!-- Khu vực danh sách phim -->
+    <div class="container">
+        <div class="section-title">Phim Mới Cập Nhật</div>
+        <div class="movie-grid" id="movieGrid">
+            
+            <!-- Phim 1 -->
+            <div class="movie-card" onclick="playVideo('https://w3schools.com')">
+                <img src="https://unsplash.com" alt="Phim Hành Động">
+                <div class="movie-info">
+                    <div class="movie-title">Điệp Viên Siêu Hạng</div>
+                </div>
+            </div>
+
+            <!-- Phim 2 -->
+            <div class="movie-card" onclick="playVideo('https://w3schools.com')">
+                <img src="https://unsplash.com" alt="Phim Hoạt Hình">
+                <div class="movie-info">
+                    <div class="movie-title">Thế Giới Hoạt Hình</div>
+                </div>
+            </div>
+
+            <!-- Phim 3 -->
+            <div class="movie-card" onclick="playVideo('https://w3schools.com')">
+                <img src="https://unsplash.com" alt="Phim Kinh Dị">
+                <div class="movie-info">
+                    <div class="movie-title">Lâu Đài Bí Ẩn</div>
+                </div>
+            </div>
+
+            <!-- Phim 4 -->
+            <div class="movie-card" onclick="playVideo('https://w3schools.com')">
+                <img src="https://unsplash.com" alt="Phim Cổ Trang">
+                <div class="movie-info">
+                    <div class="movie-title">Huyền Thoại Cổ Đại</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Giao diện xem video phóng to -->
+    <div class="video-player-container" id="videoPlayerContainer">
+        <span class="close-btn" onclick="closeVideo()">&times;</span>
+        <video id="mainVideo" controls>
+            <source src="" type="video/mp4">
+            Trình duyệt của bạn không hỗ trợ video thẻ này.
+        </video>
+    </div>
+
+    <!-- Xử lý JavaScript -->
+    <script>
+        const playerContainer = document.getElementById('videoPlayerContainer');
+        const mainVideo = document.getElementById('mainVideo');
+
+        // Hàm bật video khi bấm vào phim
+        function playVideo(videoUrl) {
+            mainVideo.src = videoUrl;
+            playerContainer.style.display = 'flex';
+            mainVideo.play();
+        }
+
+        // Hàm đóng video
+        function closeVideo() {
+            playerContainer.style.display = 'none';
+            mainVideo.pause();
+            mainVideo.src = ""; // Xóa nguồn video để dừng hẳn
+        }
+
+        // Hàm tìm kiếm phim cơ bản
+        function searchMovie() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            let cards = document.getElementsByClassName('movie-card');
+
+            for (let i = 0; i < cards.length; i++) {
+                let title = cards[i].querySelector('.movie-title').innerText.toLowerCase();
+                if (title.includes(input)) {
+                    cards[i].style.display = "";
+                } else {
+                    cards[i].style.display = "none";
+                }
+            }
+        }
+    </script>
+</body>
+</html>
